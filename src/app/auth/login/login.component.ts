@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -28,14 +29,28 @@ export class LoginComponent implements OnInit{
     if (this.loginForm.invalid) {
       return;
     }
+
+    Swal.fire({
+      title: "Auto close alert!",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    })
+
     const { email, password } = this.loginForm.value;
 
     this.authService.loginUsuario( email, password )
     .then( usuario => {
       console.log(usuario.credential);
+      Swal.close();
       this.router.navigate(['/']);
     })
-    .catch( err => console.error(err) )
+    .catch( err => Swal.fire({
+      title: 'Error!',
+      text: err.message,
+      icon: 'error',
+      confirmButtonText: 'Cool'
+    }) )
   }
 
 }
