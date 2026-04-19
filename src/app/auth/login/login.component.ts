@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit, OnDestroy{
       .subscribe(
         ui => {
           this.loading = ui.isLoading
-          console.log('CARGANDO SUBS');
         }
       )
     }
