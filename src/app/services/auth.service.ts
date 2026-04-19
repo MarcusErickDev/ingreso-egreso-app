@@ -13,6 +13,11 @@ import { setUser, unSetUser } from '../auth/auth.actions';
 export class AuthService {
 
   userSubscription!: Subscription;
+  private _user!: Usuario|null;
+
+  get user(){
+    return {...this._user};
+  }
 
   constructor( public auth: AngularFireAuth,
                private firestore: AngularFirestore,
@@ -22,17 +27,18 @@ export class AuthService {
     this.auth.authState.subscribe(
       fuser => {
 
-        //console.log('state',state?.uid);
         if (fuser) {
           this.userSubscription = this.firestore.doc(`${fuser?.uid}/usuario`).valueChanges()
             .subscribe( (firestoreUser: any) => {
 
               const user = Usuario.fromFirebase( firestoreUser );
+              this._user = user;
 
               this.store.dispatch(setUser({user}))
 
             })
         } else {
+          this._user = null;
           this.userSubscription.unsubscribe();
           this.store.dispatch(unSetUser());
 
