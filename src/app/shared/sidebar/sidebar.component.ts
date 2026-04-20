@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     .subscribe( ({ user }) => this.nombre = user!.nombre );
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.userSubs.unsubscribe();
   }
 
   logout(){
