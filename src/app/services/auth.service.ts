@@ -6,6 +6,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import { setUser, unSetUser } from '../auth/auth.actions';
+import { unsetItems } from '../ingreso-egreso/ingreso-egreso.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -33,15 +34,14 @@ export class AuthService {
 
               const user = Usuario.fromFirebase( firestoreUser );
               this._user = user;
-
-              this.store.dispatch(setUser({user}))
+              this.store.dispatch(setUser({user}));
 
             })
         } else {
           this._user = null;
           this.userSubscription.unsubscribe();
           this.store.dispatch(unSetUser());
-
+          this.store.dispatch(unsetItems());
         }
 
 
